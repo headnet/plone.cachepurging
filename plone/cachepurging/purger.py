@@ -262,16 +262,8 @@ class Worker(threading.Thread):
                                                                  url, httpVerb)
                         # worked! See if we can leave the connection open for
                         # the next item we need to process
-                        # NOTE: If we make a HTTP 1.0 request to IIS, it
-                        # returns a HTTP 1.1 request and closes the
-                        # connection.  It is not clear if IIS is evil for
-                        # not returning a "connection: close" header in this
-                        # case (ie, assuming HTTP 1.0 close semantics), or
-                        # if httplib.py is evil for not detecting this
-                        # situation and flagging will_close.
-                        if not self.producer.http_1_1 or resp.will_close:
-                            connection.close()
-                            connection = None
+                        connection.close()
+                        connection = None
                         break # all done with this item!
 
                     except (httplib.HTTPException, socket.error), e:
